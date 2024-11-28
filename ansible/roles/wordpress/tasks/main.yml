@@ -1,0 +1,69 @@
+---
+# tasks file for wordpress
+#
+#
+- name: "[WORDPRESS] - update cache "
+  apt: 
+    update_cache: yes
+    upgrade: yes
+
+- name: "[WORDPRESS] - install LAMP"
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+  - apache2
+  - php
+  - php-curl
+  - php-gd
+  - php-mbstring
+  - php-xml
+  - php-xmlrpc
+  - php-soap 
+  - libapache2-mod-php 
+  - php-mysql
+
+- name: Wordpress - Create directory
+  file:
+    path: "{{ wp_install_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Wordpress - Extract archive in {{ wp_install_dir }}
+  unarchive:
+    src: "http://wordpress.org/latest.tar.gz"
+    dest: "{{ wp_install_dir }}"
+    remote_src: yes
+
+- name: Wordpress - Move files from {{ wp_install_dir }}/wordpress to {{ wp_install_dir }}
+  command: mv {{ wp_document_root_dir }}/wp-config-sample.php {{ wp_document_root_dir }}/wp-config.php
+
+- name: Wordpress | Copy wp-config.php file
+  template:
+    src: wp-config.php.j2
+    dest: "{{ wp_document_root_dir }}/wp-config.php"
+
+- name: Wordpress | Change ownership of installation directory
+  file:
+    path: "{{ wp_document_root_dir }}"
+    owner: www-data
+    group: www-data
+    state: directory
+    recurse: yes
+    mode: '0775'
+
+- name: Wordpress | Copy wordpress.conf file
+  template:
+    src: wordpress.conf.j2
+    dest: "/etc/apache2/sites-available/wordpress.conf"
+
+
+- name: Enable Module rewrite
+  apache2_module:
+    name: rewrite
+    state: present
+
+- name: Enable site wordpress
+  command: a2ensite wordpress.conf
+  notify:
+    - restart apache2   

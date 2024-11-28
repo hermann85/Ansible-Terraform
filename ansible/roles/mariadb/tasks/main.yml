@@ -1,0 +1,78 @@
+---
+# tasks file for mariadb
+
+- name: Install Utility software
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - software-properties-common
+    - python3-mysqldb
+
+- name: Install MariaDB Packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - mariadb-client
+    - mariadb-common
+    - mariadb-server
+
+- name: Start MariaDB
+  service:
+    name: mysql
+    state: started
+
+- name: Is root password set?
+  command: mysql -u {{ mariadb_user_login }} --execute "SELECT NOW()"
+  register: is_root_password_set
+  ignore_errors: yes
+
+- name: Delete anonymous users
+  mysql_user:
+    user: ""
+    state: absent
+  when: is_root_password_set.rc == 0
+
+- name: Set root password
+  mysql_user:
+    user: "{{ mariadb_user_login }}"
+    password: "{{ mariadb_user_password }}"
+    host: "{{ mariadb_user_login_host }}" 
+  when: is_root_password_set.rc == 0
+
+- name: Set root password for other hosts
+  mysql_user:
+    user: "{{ mariadb_user_login }}"
+    password: "{{ mariadb_user_password }}"
+    host: "{{item}}"
+    login_user: "{{ mariadb_user_login }}"
+    login_host: "{{ mariadb_user_login_host }}" 
+    login_password: "{{ mariadb_user_password }}"
+  when: is_root_password_set.rc == 0
+  with_items:
+    - "127.0.0.1"
+    - "::1"
+
+- name: Create database
+  mysql_db:
+    name: "{{ item.name }}"
+    login_user: "{{ mariadb_user_login }}"
+    login_password: "{{ mariadb_user_password }}"
+    login_host: "{{ mariadb_user_login_host }}" 
+    state: present
+  with_items:
+    - "{{ mariadb_databases }}"
+  
+
+- name: Create user 
+  mysql_user:
+    name: "{{ item.user }}"
+    password: "{{ item.password }}"
+    priv: "{{ item.name }}.*:ALL"
+    login_user: "{{ mariadb_user_login }}"
+    login_password: "{{ mariadb_user_password }}"
+    state: present
+  with_items:
+    - "{{ mariadb_databases }}"

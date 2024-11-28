@@ -1,0 +1,22 @@
+---
+###################
+# first Playbook
+###################
+- hosts: mon-instance-ec2
+  vars:
+    mariadb_user_password: "root"
+    mariadb_databases:
+      - name: "wordpress"
+        user: "wordpress"
+        password: "wordpress"
+    wp_mysql_db: "wordpress"
+    wp_mysql_user: "wordpress"
+    wp_mysql_password: "wordpress"
+    wp_mysql_host: "localhost"
+    wp_server_name: "ec2-13-37-220-136.eu-west-3.compute.amazonaws.com"
+        
+  become: true      
+  roles:
+  - mariadb
+  - wordpress
+    

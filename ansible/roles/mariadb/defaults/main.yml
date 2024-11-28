@@ -1,0 +1,6 @@
+---
+# defaults file for mariadb
+mariadb_user_login: "root"
+mariadb_user_password: ""
+mariadb_user_login_host: "localhost"
+mariadb_databases: 

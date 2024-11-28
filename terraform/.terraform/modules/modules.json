@@ -1,0 +1,1 @@
+{"Modules":[{"Key":"","Source":"","Dir":"."},{"Key":"web_server_sg","Source":"registry.terraform.io/terraform-aws-modules/security-group/aws//modules/http-80","Version":"5.1.0","Dir":".terraform/modules/web_server_sg/modules/http-80"},{"Key":"web_server_sg.sg","Source":"../..","Dir":".terraform/modules/web_server_sg"}]}
