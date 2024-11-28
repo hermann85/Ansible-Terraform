@@ -2,7 +2,7 @@
 
 - Installation de wordpress
 
-1 Terraform
+1- Terraform
   * Installation
     - sudo apt update -y && sudo apt upgrade -y
     - sudo apt install -y wget unzip
@@ -17,7 +17,7 @@ wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_am
 
   * Création des fichiers 
 
-2 Ansible
+2- Ansible
   * Installation
     - sudo apt update
     - sudo apt install software-properties-common
