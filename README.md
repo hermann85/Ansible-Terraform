@@ -1,6 +1,7 @@
 # Ansible-Terraform-AWS
 # Migrez une infrastructure physique vers le cloud
-- Installation de wordpress
+
+- Wordpress
 
 1- Terraform
   * Installation
