@@ -1,5 +1,5 @@
-# Ansible-Terraform
-
+# Ansible-Terraform-AWS
+# Migrez une infrastructure physique vers le cloud
 - Installation de wordpress
 
 1- Terraform
@@ -9,13 +9,19 @@
 wget https://releases.hashicorp.com/terraform/0.12.24/terraform_0.12.24_linux_amd64.zip
     - sudo unzip ./terraform_0.12.24_linux_amd64.zip -d /usr/local/bin
 
-  * création de la clé d’Accès IAM dans AWS
-  * configuration AWS cli en local
+  * Création de compte AWS
+  * Création de la clé d’Accès IAM dans AWS
+  * Configuration AWS cli en local
     - curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o"awscliv2.zip"
     - unzip awscliv2.zip
     - sudo ./aws/install
 
-  * Création des fichiers 
+  * Création des fichiers
+  * Déploiement
+    - terraform init
+    - terraform plan
+    - terraform apply
+    - terraform destroy
 
 2- Ansible
   * Installation
